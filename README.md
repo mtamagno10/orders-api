@@ -1,8 +1,8 @@
-# Orders API & Customers API - Microservicios
+# Orders API & Customers API - Prueba Técnica Monokera
 
 ## Descripción General
 
-Esta aplkicación está compuesta por dos microservicios principales:
+Esta aplicación está compuesta por dos microservicios principales:
 
 - **Orders API:** Gestiona la creación y consulta de órdenes. Publica eventos de órdenes creadas en RabbitMQ.
 - **Customers API:** Gestiona los clientes y escucha eventos desde RabbitMQ para actualizar datos relacionados.
