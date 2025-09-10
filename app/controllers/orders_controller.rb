@@ -1,29 +1,29 @@
-    class OrdersController < ApplicationController
+class OrdersController < ApplicationController
     def create
-        customer_id = order_params[:customer_id]
+        customer_service = CustomerService.new
+        order_service = OrderCreationService.new
 
-        customer_details = CustomerApiClient.new.get_customer(customer_id)
+        customer_details = customer_service.fetch_customer(order_params[:customer_id])
 
-        if customer_details["error"]
-        render json: { error: "Customer not found" }, status: :not_found
-        return
+        if customer_details[:error]
+            render json: { error: customer_details[:error] }, status: :not_found
+            return
         end
 
-        order = Order.new(order_params)
-        if order.save
-        OrderEventPublisher.publish_order_created(order)
-        render json: { order: order, customer: customer_details }, status: :created
+        result = order_service.create_order(order_params, customer_details)
+        if result[:success]
+            render json: { order: result[:order], customer: customer_details }, status: :created
         else
-        render json: { errors: order.errors.full_messages }, status: :unprocessable_content
+            render json: { errors: result[:errors] }, status: :unprocessable_content
         end
     end
 
     def index
         if params[:customer_id].present?
-        orders = Order.where(customer_id: params[:customer_id])
-        render json: orders
+            orders = Order.where(customer_id: params[:customer_id])
+            render json: orders
         else
-        render json: { error: "customer_id is required" }, status: :bad_request
+            render json: { error: "customer_id is required" }, status: :bad_request
         end
     end
 
@@ -32,4 +32,4 @@
     def order_params
         params.require(:order).permit(:customer_id, :product_name, :quantity, :price, :status)
     end
-    end
+end
