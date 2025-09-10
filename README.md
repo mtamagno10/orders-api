@@ -2,7 +2,7 @@
 
 ## Descripción General
 
-Este sistema está compuesto por dos microservicios principales:
+Esta aplkicación está compuesta por dos microservicios principales:
 
 - **Orders API:** Gestiona la creación y consulta de órdenes. Publica eventos de órdenes creadas en RabbitMQ.
 - **Customers API:** Gestiona los clientes y escucha eventos desde RabbitMQ para actualizar datos relacionados.
@@ -15,8 +15,8 @@ La comunicación entre servicios se realiza mediante HTTP y eventos asíncronos 
 
 ### Requisitos previos
 
-- Ruby (recomendado: versión 3.x)
-- Rails (recomendado: versión 7.x)
+- Ruby (utilizada: versión 3.2.2)
+- Rails (utilizada: versión 8.0.2.1)
 - RabbitMQ corriendo localmente (`localhost:5672`)
 - Bundler (`gem install bundler`)
 - Cada microservicio debe estar clonado en su propia carpeta (por ejemplo `orders-api` y `customers-api`)
@@ -32,7 +32,7 @@ cd <carpeta-del-api>
 bundle install
 rails db:create
 rails db:migrate
-rails db:seed
+rails db:seed (sólo aplica a customer-api)
 ```
 
 > Repite estos pasos tanto en `orders-api` como en `customers-api`.
@@ -41,16 +41,12 @@ rails db:seed
 
 ### 2. Configurar las variables de entorno
 
-Cada microservicio requiere ciertas variables para conectarse a RabbitMQ y al otro servicio.  
+El microservicio orders-api requiere configurar la URL de customers-api en variablesde entorno.  
 Puedes definirlas en archivos `.env` (usando la gema dotenv) o exportarlas en la terminal.
 
-Ejemplo mínimo de variables en cada microservicio:
-
 ```
-RABBITMQ_HOST=localhost
-RABBITMQ_PORT=5672
 CUSTOMERS_API_URL=http://localhost:3001
-ORDERS_API_URL=http://localhost:3000
+
 ```
 
 ---
@@ -92,15 +88,11 @@ rails runner 'OrderEventsListener.run'
 
 - [Repositorio Customers API](https://github.com/mtamagno10/customer-api)
 - [Repositorio Orders API](https://github.com/mtamagno10/orders-api) <!-- Este README -->
-- [Documentación de RabbitMQ](https://www.rabbitmq.com/documentation.html)
-- [Rails Guides](https://guides.rubyonrails.org/)
 
 ---
 
 ## Notas adicionales
 
-- Si tienes dudas sobre cómo iniciar el listener, revisa el README de `customer-api`.
-- Si usas Docker Compose, la configuración difiere: consulta la documentación del proyecto.
 - Las APIs deben estar corriendo en los puertos configurados (3000 para orders y 3001 para customers) para que la integración funcione correctamente.
 
 ---
