@@ -92,7 +92,7 @@ rails runner 'OrderEventsListener.run'
 ---
 
 ## Notas adicionales
-
+git add .
 - Las APIs deben estar corriendo en los puertos configurados (3000 para orders y 3001 para customers) para que la integración funcione correctamente.
 
 ---
