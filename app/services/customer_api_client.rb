@@ -2,7 +2,7 @@ require 'httparty'
 
 class CustomerApiClient
   include HTTParty
-  base_uri 'http://localhost:3001'
+  base_uri ENV.fetch('CUSTOMER_API_URL')
 
   def get_customer(id)
     response = self.class.get("/customers/#{id}")
